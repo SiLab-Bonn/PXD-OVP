@@ -1,0 +1,95 @@
+PIN "mc_d_fltn[0]" LOC = PIN25;
+PIN "mc_d_fltn[1]" LOC = PIN28;
+PIN "mc_d_fltn[2]" LOC = PIN29;
+PIN "mc_d_fltn[3]" LOC = PIN30;
+
+PIN "mc_a_fltn[0]" LOC = PIN32;
+PIN "mc_a_fltn[1]" LOC = PIN35;
+PIN "mc_a_fltn[2]" LOC = PIN53;
+PIN "mc_a_fltn[3]" LOC = PIN52;
+
+PIN "mc_st_fltn[0]" LOC = PIN55;
+PIN "mc_st_fltn[1]" LOC = PIN56;
+PIN "mc_st_fltn[2]" LOC = PIN58;
+PIN "mc_st_fltn[3]" LOC = PIN59;
+PIN "mc_st_fltn[4]" LOC = PIN60;
+PIN "mc_st_fltn[5]" LOC = PIN61;
+PIN "mc_st_fltn[6]" LOC = PIN63;
+PIN "mc_st_fltn[7]" LOC = PIN64;
+
+PIN "mc_gt_fltn[0]" LOC = PIN65;
+PIN "mc_gt_fltn[1]" LOC = PIN66;
+PIN "mc_gt_fltn[2]" LOC = PIN67;
+PIN "mc_gt_fltn[3]" LOC = PIN68;
+PIN "mc_gt_fltn[4]" LOC = PIN70;
+PIN "mc_gt_fltn[5]" LOC = PIN71;
+PIN "mc_gt_fltn[6]" LOC = PIN72;
+PIN "mc_gt_fltn[7]" LOC = PIN74;
+
+PIN "uc_gt_offb"    LOC = PIN77;
+NET "uc_gt_offb"    SLEW = SLOW;
+PIN "uc_gt_offa"    LOC = PIN76;
+NET "uc_gt_offa"    SLEW = SLOW;
+
+
+PIN "uc_st_offb"    LOC = PIN16;
+NET "uc_st_offb"    SLEW = SLOW;
+PIN "uc_st_offa"    LOC = PIN13;
+NET "uc_st_offa"    SLEW = SLOW;
+
+PIN "uc_a_rstn"     LOC = PIN42;
+NET "uc_a_rstn"     SLEW=SLOW;
+
+PIN "uc_d_shdwn"    LOC = PIN50;
+NET "uc_d_shdwn"    SLEW = SLOW;
+
+PIN "uc_a_shdwn"    LOC = PIN54;
+NET "uc_a_shdwn"    SLEW = SLOW;
+
+PIN "uc_a_off"      LOC = PIN41;
+NET "uc_a_off"      SLEW = SLOW;
+
+
+PIN "OVP_IO_A[0]"     LOC = PIN12;
+PIN "OVP_IO_A[1]"     LOC = PIN10;
+PIN "OVP_IO_A[2]"     LOC = PIN11;
+PIN "OVP_IO_A[3]"     LOC = PIN8;
+PIN "OVP_IO_A[4]"     LOC = PIN9;
+PIN "OVP_IO_A[5]"     LOC = PIN6;
+
+PIN "OVP_IO_STAT"   LOC = PIN3;
+NET "OVP_IO_STAT"    SLEW = SLOW;
+
+PIN "OVP_IO_MUX"    LOC = PIN4;
+NET "OVP_IO_MUX"    SLEW = SLOW;
+
+
+PIN "diodes[0]"     LOC = PIN97;
+NET "diodes[0]"    SLEW = SLOW;
+PIN "diodes[1]"     LOC = PIN96;
+NET "diodes[1]"    SLEW = SLOW;
+PIN "diodes[2]"     LOC = PIN95;
+NET "diodes[2]"    SLEW = SLOW;
+PIN "diodes[3]"     LOC = PIN94;
+NET "diodes[3]"    SLEW = SLOW;
+
+PIN "rst_n"         LOC = PIN23;
+
+PIN "SHDN_1"        LOC = PIN15;
+PIN "SHDN_2"        LOC = PIN17;
+
+PIN "JMP"           LOC = PIN1;
+
+
+PIN "ax_res"          LOC = PIN85;
+PIN "ax_clk"          LOC = PIN89;
+PIN "ax_frame"        LOC = PIN90;
+PIN "ax_data"         LOC = PIN86;
+NET "ax_data"        SLEW = SLOW;
+
+PIN "ax_write"        LOC = PIN78;
+PIN "ax_data_in"      LOC = PIN79;
+
+
+
+
