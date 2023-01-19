@@ -10,7 +10,7 @@
 
 #define OVP_I2C_ADD 0x3c
 #define BYTES_TO_READ 8
-#define FW_VERSION 2.1
+#define FW_VERSION "2.1"
 
 const int OVP_STATUS_PIN = 2;
 
@@ -73,11 +73,11 @@ void ReadOVP()
 void ReadSerial()
 {
   unsigned char byteCount = 0;
-  char charBuf[2] = "";
+  char charBuf[2] = "0";
   unsigned char temp;
   char rc;
   boolean endTransmission = false;
-   
+
   do 
   {
     while (Serial.available() < 1)  // wait for new character
@@ -89,13 +89,14 @@ void ReadSerial()
       endTransmission = true;
 
     if (isxdigit(rc)) // HEX character received
-    {
-      charBuf[0] = charBuf[1];  // keep the last two received digits
+    { // keep the last two received digits
+      if (charBuf[1] != '\0')  // don't copy buffer for first digit
+        charBuf[0] = charBuf[1];  
       charBuf[1] = rc;
     }
     else if ((rc == ' ') || endTransmission)  // field separator found or LF or CR received
     {
-      if (charBuf[0] != '\0')  // something valid received?
+      if (charBuf[1] != '\0')  // something valid received?
       {
         temp = strtol(charBuf, 0, 16);
         switch (byteCount)
@@ -111,7 +112,8 @@ void ReadSerial()
         byteCount = 0;
       else
         byteCount ++;  
-      charBuf[0] = '\0';  // reset buffer for next word
+      charBuf[0] = '0';   // prepare buffer for next word: pad with '0' to cope with single digits reads
+      charBuf[1] = '\0';  // 0-termination
     }
   } while ((byteCount < 4) && !endTransmission);  // do this until all bytes are processed or end of transmission received
 }
