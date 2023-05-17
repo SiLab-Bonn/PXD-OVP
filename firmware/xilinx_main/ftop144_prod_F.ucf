@@ -57,7 +57,7 @@ PIN "OVP_IO_A[3]"     LOC = PIN8;
 PIN "OVP_IO_A[4]"     LOC = PIN9;
 PIN "OVP_IO_A[5]"     LOC = PIN6;
 
-PIN "OVP_IO_STAT"   LOC = PIN3;
+PIN "OVP_IO_STAT"   	LOC = PIN3;
 NET "OVP_IO_STAT"    SLEW = SLOW;
 
 PIN "OVP_IO_MUX"    LOC = PIN4;
@@ -76,12 +76,12 @@ NET "diodes[3]"    SLEW = SLOW;
 PIN "rst_n"         LOC = PIN23;
 
 PIN "SHDN_1"        LOC = PIN15;
-PIN "SHDN_2"        LOC = PIN17;
+//PIN "SHDN_2"        LOC = PIN17;
 
 PIN "JMP"           LOC = PIN1;
 
 
-PIN "ax_res"          LOC = PIN85;
+//PIN "ax_res"          LOC = PIN85;
 PIN "ax_clk"          LOC = PIN89;
 PIN "ax_frame"        LOC = PIN90;
 PIN "ax_data"         LOC = PIN86;
@@ -89,6 +89,24 @@ NET "ax_data"        SLEW = SLOW;
 
 PIN "ax_write"        LOC = PIN78;
 PIN "ax_data_in"      LOC = PIN79;
+
+PIN "clk"				 LOC = PIN85;
+
+PIN "OVP_IO_STAT_delay"	 	LOC = PIN91;
+NET "OVP_IO_STAT_delay" 	SLEW = SLOW;
+PIN "OVP_IO_STAT_delay_2"	LOC = PIN81;
+NET "OVP_IO_STAT_delay_2" 	SLEW = SLOW;
+PIN "OVP_IO_STAT_delay_3"	LOC = PIN14;
+NET "OVP_IO_STAT_delay_3" 	SLEW = SLOW;		
+PIN "OVP_IO_STAT_delay_4"	LOC = PIN39;
+NET "OVP_IO_STAT_delay_4" 	SLEW = SLOW;
+PIN "OVP_IO_STAT_delay_5"	LOC = PIN82;
+NET "OVP_IO_STAT_delay_5" 	SLEW = SLOW;
+PIN "OVP_IO_STAT_delay_6"	LOC = PIN92;
+NET "OVP_IO_STAT_delay_6" 	SLEW = SLOW;
+						
+PIN "en"					 	 LOC = PIN36;
+
 
 
 

@@ -19,7 +19,7 @@ ENTITY ftop144_prod_F IS
     mc_st_fltn : IN  STD_LOGIC_VECTOR(7 downto 0);  
     mc_gt_fltn : IN  STD_LOGIC_VECTOR(7 downto 0);
     
-    SHDN_2     : IN  STD_LOGIC;
+    --SHDN_2     : IN  STD_LOGIC;
     SHDN_1     : IN  STD_LOGIC;
     
     rst_n      : IN  STD_LOGIC;
@@ -29,7 +29,7 @@ ENTITY ftop144_prod_F IS
     OVP_IO_STAT: OUT STD_LOGIC;
     OVP_IO_A   : IN  STD_LOGIC_VECTOR(5 downto 0);
   
-    uc_a_rstn  : OUT STD_LOGIC; --not used 
+    uc_a_rstn  : OUT STD_LOGIC; -- not used 
     uc_a_shdwn : OUT STD_LOGIC; -- shutdown for analog genbarts
     uc_a_off   : OUT STD_LOGIC; -- off for analog 2912 
     
@@ -38,14 +38,24 @@ ENTITY ftop144_prod_F IS
     uc_gt_offa : OUT STD_LOGIC; -- off for gt 2912
     uc_gt_offb : OUT STD_LOGIC; -- off for gt 2912
     uc_st_offa : OUT STD_LOGIC; -- off for st 2912
-    uc_st_offb : OUT STD_LOGIC;  -- off for st 2912
+    uc_st_offb : OUT STD_LOGIC; -- off for st 2912
     
-    ax_res       : OUT STD_LOGIC;  -- betw(0)
-    ax_clk       : IN STD_LOGIC;  -- betw(1)
-    ax_frame     : IN STD_LOGIC;  -- betw(2)
-    ax_data      : OUT STD_LOGIC; -- betw(3)
-    ax_write     : IN STD_LOGIC;  -- betw(4)
-    ax_data_in   : IN STD_LOGIC   -- betw(5)  
+   -- ax_res       : OUT STD_LOGIC;   -- betw(0)
+    ax_clk       : IN STD_LOGIC;    -- betw(1)
+    ax_frame     : IN STD_LOGIC;    -- betw(2)
+    ax_data      : OUT STD_LOGIC;   -- betw(3)
+    ax_write     : IN STD_LOGIC;    -- betw(4)
+    ax_data_in   : IN STD_LOGIC;    -- betw(5)
+
+    clk          : IN STD_LOGIC;    -- clock for flipflop  
+
+    OVP_IO_STAT_delay 	: INOUT STD_LOGIC;   -- delay of output signal
+    OVP_IO_STAT_delay_2 : INOUT STD_LOGIC;
+	  OVP_IO_STAT_delay_3 : INOUT STD_LOGIC;
+	  OVP_IO_STAT_delay_4 : INOUT STD_LOGIC;
+    OVP_IO_STAT_delay_5 : INOUT STD_LOGIC;
+	  OVP_IO_STAT_delay_6 : INOUT STD_LOGIC;
+    en                	: IN STD_LOGIC       -- enable tri-state buffer
   ); 
   
 END ENTITY ftop144_prod_F;
@@ -58,7 +68,7 @@ ARCHITECTURE arch OF ftop144_prod_F IS
   signal rd_fltn : std_logic_vector(3 downto 0);
   signal rst_fltn : std_logic_vector(7 downto 0);
   signal rgt_fltn : std_logic_vector(7 downto 0);
- 
+
   signal a_fltn : std_logic;
   signal d_fltn : std_logic;
   signal st_fltn : std_logic;
@@ -77,7 +87,7 @@ ARCHITECTURE arch OF ftop144_prod_F IS
   signal blockn : std_logic;
   
   -- F version
-  signal sdata_out : std_logic;
+  --signal sdata_out : std_logic;
   signal mux_out   : std_logic;
   signal eng_mode  : std_logic;
   signal norm_reset : std_logic;
@@ -118,8 +128,16 @@ BEGIN
   
   istat <= (a_fltn and d_fltn and st_fltn and gt_fltn) or eng_mode; 
   --eng_mode => do not stop pow. supply 
-  OVP_IO_STAT <= istat;
-  
+  --OVP_IO_STAT <= istat;
+  OVP_IO_STAT_delay <= istat when en = '1' else 'Z';
+  OVP_IO_STAT_delay_2 <= OVP_IO_STAT_delay when en = '1' else 'Z';  -- six stage delay
+  OVP_IO_STAT_delay_3 <= OVP_IO_STAT_delay_2 when en = '1' else 'Z'; 
+  OVP_IO_STAT_delay_4 <= OVP_IO_STAT_delay_3 when en = '1' else 'Z'; 
+  OVP_IO_STAT_delay_5 <= OVP_IO_STAT_delay_4 when en = '1' else 'Z';
+  OVP_IO_STAT_delay_6 <= OVP_IO_STAT_delay_5 when en = '1' else 'Z';
+
+  OVP_IO_STAT <= istat or OVP_IO_STAT_delay_6;
+
   d_fltn  <= rd_fltn(0) and rd_fltn(1) and rd_fltn(2) and rd_fltn(3);  
   a_fltn  <= ra_fltn(0) and ra_fltn(1) and ra_fltn(2) and ra_fltn(3);
   st_fltn <= rst_fltn(0) and rst_fltn(1) and rst_fltn(2) and rst_fltn(3) and
@@ -174,46 +192,46 @@ BEGIN
    end LOOP; 
  end process orek;
  --***************************************************************************** 
-  reg_digital: process(reg_reset, gmc_d_fltn)
+  reg_digital: process(reg_reset, clk)
   begin
        for i in 0 to 3 loop
           if(reg_reset = '1') then
               rd_fltn(i)  <= '1';
-          elsif(gmc_d_fltn(i)='0') then
-              rd_fltn(i) <= '0';
+          elsif(clk'event and clk='0') then
+              rd_fltn(i) <= gmc_d_fltn(i);    --falling edge D-FF
           end if;    
        end loop;              
-  end process reg_digital; 
+  end process reg_digital;
  --***************************************************************************** 
-  reg_analog: process(reg_reset, gmc_a_fltn)
+  reg_analog: process(reg_reset, clk)
   begin
        for i in 0 to 3 loop
          if(reg_reset = '1') then
             ra_fltn(i) <= '1';
-         elsif(gmc_a_fltn(i)='0') then
-            ra_fltn(i) <= '0';
+         elsif(clk'event and clk='0') then
+            ra_fltn(i) <= gmc_a_fltn(i);    --falling edge D-FF
          end if;   
        end loop;               
   end process reg_analog;
  --*****************************************************************************  
-  reg_st: process(reg_reset, gmc_st_fltn)
+  reg_st: process(reg_reset, clk)
   begin
        for i in 0 to 7 loop
           if(reg_reset = '1') then
               rst_fltn(i) <= '1';
-          elsif(gmc_st_fltn(i)='0' ) then
-              rst_fltn(i) <= '0';
+          elsif(clk'event and clk='0') then
+              rst_fltn(i) <= gmc_st_fltn(i);    --falling edge D-FF
           end if;   
        end loop;            
   end process reg_st; 
  --*****************************************************************************  
-  reg_gt: process(reg_reset, gmc_gt_fltn)
+  reg_gt: process(reg_reset, clk)
   begin  
        for i in 0 to 7 loop
          if(reg_reset = '1') then
             rgt_fltn(i) <= '1';
-         elsif(gmc_gt_fltn(i)='0') then
-            rgt_fltn(i) <= '0';
+         elsif(clk'event and clk='0') then
+            rgt_fltn(i) <= gmc_gt_fltn(i);    --falling edge D-FF
          end if;   
        end loop;             
   end process reg_gt; 
@@ -232,14 +250,15 @@ BEGIN
    if(ax_frame = '0') then
      iaxframecount <= 0;
      cnb <= 31;
-   elsif(ax_clk'event and ax_clk='0') then -- negedge !!!!! 
+   elsif(ax_clk'event and ax_clk='0') then -- negedge !!!!!
+   --elsif(ax_clk'event and ax_clk='0' and cnb /= 0) then -- negedge !!!!!  --comment in for simulation
      iaxframecount <= iaxframecount + 1;
      cnb <=cnb-1;
    end if;
  end process axframecount;
  
  ax_data <= iax_data_read;
- ax_res <= not rst_n;
+ --ax_res <= not rst_n;
  
  pumpomux:process(ax_write,iaxframecount, istat,stat,creg)
  begin
