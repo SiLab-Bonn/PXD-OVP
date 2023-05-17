@@ -2,7 +2,7 @@
 //
 // configures and polls the OVP periodically via I2C and send the readback data via serial port
 //
-// HK 2023
+// HK 2023 / PA 2023
 
 #include <Wire.h>
 #include <Streaming.h>
@@ -10,9 +10,14 @@
 
 #define OVP_I2C_ADD 0x3c
 #define BYTES_TO_READ 8
-#define FW_VERSION "2.1"
+#define FW_VERSION "2.2"
 
 const int OVP_STATUS_PIN = 2;
+
+int OVP_state      = 1;
+int last_OVP_state  = 1;
+int flag = 0; 
+uint16_t counter = 0;  
 
 unsigned char confReg;
 unsigned char mask0;
@@ -27,8 +32,22 @@ void setup() {
   Wire.begin();        // join i2c bus (address optional for master)
   Serial.begin(9600);  // start serial for output
   pinMode(OVP_STATUS_PIN, INPUT);
+  attachInterrupt(digitalPinToInterrupt(OVP_STATUS_PIN), LogReading, FALLING);  // check on OVP_IO_STAT pin
 
   Serial << "OVP board interface, FW version: " << FW_VERSION << endl;
+}
+
+
+void LogReading(){
+  OVP_state = digitalRead(OVP_STATUS_PIN);
+  if (OVP_state == 0) { 
+      flag=0;     
+  }
+  else {
+    flag=1;
+    counter++;  // single event transient counter
+  }
+
 }
 
 void WriteOVP()
@@ -130,7 +149,8 @@ void WriteSerial()
          << _WIDTHZ(_HEX(mask0), 2)   << " "
          << _WIDTHZ(_HEX(mask1), 2)   << " "
          << _WIDTHZ(_HEX(mask2), 2)   << " "
-         << digitalRead(OVP_STATUS_PIN) << endl;
+         << digitalRead(OVP_STATUS_PIN) << " "
+         << counter << endl;
 }
 
 
@@ -159,5 +179,12 @@ void ProcessSerial()
 void loop() 
 {
   ProcessSerial();
+  OVP_state = digitalRead(OVP_STATUS_PIN);
+  if (OVP_state != last_OVP_state) {
+    if (OVP_state == 0) { 
+      Serial.println("OVP");            
+      }
+    last_OVP_state = OVP_state;
+  }
   delay(100);
 }
