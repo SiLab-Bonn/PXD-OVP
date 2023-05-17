@@ -1,0 +1,35 @@
+NET "SCL_TX_A" LOC = PIN28;
+
+NET "SCL_TX_B" LOC = PIN25;
+NET "SDA_TX_B" LOC = PIN14;
+NET "SDA_RX_B" LOC = PIN13;
+
+NET "clk48"    LOC = PIN22;
+
+NET "SDA_TX_A" LOC = PIN1;
+NET "SDA_RX_A" LOC = PIN11;
+
+NET "SDA_RX" LOC = PIN60;
+NET "SDA_TX" LOC = PIN61;
+
+NET "SCL_TX" LOC = PIN58;
+NET "SCL_RX_DUM" LOC = PIN59;
+
+NET "op[4]" LOC = PIN32;
+NET "op[3]" LOC = PIN35;
+NET "op[2]" LOC = PIN37;
+NET "op[1]" LOC = PIN41;
+NET "op[0]" LOC = PIN42;
+
+NET "ax_dout"    LOC = PIN66;
+NET "ax_write"  LOC = PIN67;
+NET "ax_data"   LOC = PIN72;
+NET "ax_frame"  LOC = PIN70;
+NET "ax_clk"    LOC = PIN71;
+NET "ax_res"    LOC = PIN74;
+
+
+
+
+
+
