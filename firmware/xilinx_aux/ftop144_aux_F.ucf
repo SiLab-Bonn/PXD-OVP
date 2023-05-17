@@ -26,7 +26,9 @@ NET "ax_write"  LOC = PIN67;
 NET "ax_data"   LOC = PIN72;
 NET "ax_frame"  LOC = PIN70;
 NET "ax_clk"    LOC = PIN71;
-NET "ax_res"    LOC = PIN74;
+//NET "ax_res"    LOC = PIN74;
+
+NET "clk_out"	LOC = PIN74;
 
 
 
