@@ -51,10 +51,10 @@ ENTITY ftop144_prod_F IS
 
     OVP_IO_STAT_delay 	: INOUT STD_LOGIC;   -- delay of output signal
     OVP_IO_STAT_delay_2 : INOUT STD_LOGIC;
-	  OVP_IO_STAT_delay_3 : INOUT STD_LOGIC;
-	  OVP_IO_STAT_delay_4 : INOUT STD_LOGIC;
+    OVP_IO_STAT_delay_3 : INOUT STD_LOGIC;
+    OVP_IO_STAT_delay_4 : INOUT STD_LOGIC;
     OVP_IO_STAT_delay_5 : INOUT STD_LOGIC;
-	  OVP_IO_STAT_delay_6 : INOUT STD_LOGIC;
+    OVP_IO_STAT_delay_6 : INOUT STD_LOGIC;
     en                	: IN STD_LOGIC       -- enable tri-state buffer
   ); 
   
@@ -91,6 +91,8 @@ ARCHITECTURE arch OF ftop144_prod_F IS
   signal mux_out   : std_logic;
   signal eng_mode  : std_logic;
   signal norm_reset : std_logic;
+  
+  signal OVP_IO_state : std_logic;
   
   
   signal istat : std_logic;
@@ -136,7 +138,11 @@ BEGIN
   OVP_IO_STAT_delay_5 <= OVP_IO_STAT_delay_4 when en = '1' else 'Z';
   OVP_IO_STAT_delay_6 <= OVP_IO_STAT_delay_5 when en = '1' else 'Z';
 
-  OVP_IO_STAT <= istat or OVP_IO_STAT_delay_6;
+  --OVP_IO_STAT <= istat or OVP_IO_STAT_delay_6;
+  OVP_IO_state <= istat or OVP_IO_STAT_delay_6;
+
+  OVP_IO_STAT <= OVP_IO_state;
+
 
   d_fltn  <= rd_fltn(0) and rd_fltn(1) and rd_fltn(2) and rd_fltn(3);  
   a_fltn  <= ra_fltn(0) and ra_fltn(1) and ra_fltn(2) and ra_fltn(3);
@@ -197,7 +203,7 @@ BEGIN
        for i in 0 to 3 loop
           if(reg_reset = '1') then
               rd_fltn(i)  <= '1';
-          elsif(clk'event and clk='0') then
+          elsif(clk'event and clk='0' and OVP_IO_state = '1') then
               rd_fltn(i) <= gmc_d_fltn(i);    --falling edge D-FF
           end if;    
        end loop;              
@@ -208,7 +214,7 @@ BEGIN
        for i in 0 to 3 loop
          if(reg_reset = '1') then
             ra_fltn(i) <= '1';
-         elsif(clk'event and clk='0') then
+         elsif(clk'event and clk='0' and OVP_IO_state = '1') then
             ra_fltn(i) <= gmc_a_fltn(i);    --falling edge D-FF
          end if;   
        end loop;               
@@ -219,7 +225,7 @@ BEGIN
        for i in 0 to 7 loop
           if(reg_reset = '1') then
               rst_fltn(i) <= '1';
-          elsif(clk'event and clk='0') then
+          elsif(clk'event and clk='0' and OVP_IO_state = '1') then
               rst_fltn(i) <= gmc_st_fltn(i);    --falling edge D-FF
           end if;   
        end loop;            
@@ -230,7 +236,7 @@ BEGIN
        for i in 0 to 7 loop
          if(reg_reset = '1') then
             rgt_fltn(i) <= '1';
-         elsif(clk'event and clk='0') then
+         elsif(clk'event and clk='0' and OVP_IO_state = '1') then
             rgt_fltn(i) <= gmc_gt_fltn(i);    --falling edge D-FF
          end if;   
        end loop;             
