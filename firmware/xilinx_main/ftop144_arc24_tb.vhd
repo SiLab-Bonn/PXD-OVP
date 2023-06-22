@@ -86,23 +86,23 @@ architecture arch of ftop144_prod_F_tb is
   signal data_reg : std_logic_vector(32-1 downto 0) := "00000000000000000000000011111100";
   signal finished : std_logic;
   signal en       : std_logic;
-  constant delay  : time := 200 ns;
+  constant delay  : time := 250 ns;
 
 
 
 begin
   clk   <= not clk  after 10.4 ns;  -- 48 MHz clock
 
-  ax_clk <= not ax_clk after 10.4 ns when finished /= '1' else '1';
-  --ax_clk <= not ax_clk after 0.5 ns when finished /= '1' else '1';
+  --ax_clk <= not ax_clk after 10.4 ns when finished /= '1' else '1';
+  ax_clk <= not ax_clk after 0.5 ns when finished /= '1' else '1';
   
   -- active high : jumper off => engineering mode
   JMP <= '0';
 
   -- reset signals
   --SHDN_2 <= '0';
-  SHDN_1 <= '1';
-
+  --SHDN_1 <= '1';
+  SHDN_1<= '1', '0' after 900 ns, '1' after 950 ns;
   -- delay with tri-state buffer
   en <= '1';
 
@@ -125,7 +125,7 @@ begin
   rst_n <= '0', '1' after 100 ns; -- produces reset
 
   mc_d_fltn <= "1111";
-  mc_a_fltn <= "1111", "1101" after 500 ns, "1111" after 500 ns+delay; --Channel fault in analog domain
+  mc_a_fltn <= "1111", "1101" after 510 ns, "1111" after 500 ns+delay; --Channel fault in analog domain
   mc_gt_fltn <= "11111111";
   mc_st_fltn <= "11111111";
 
