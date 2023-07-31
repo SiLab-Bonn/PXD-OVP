@@ -50,7 +50,7 @@
 // This delay also has the effect of adding extra hold time to the data
 // with respect to SCL falling edge. I2C spec requires 0nS of data hold time.
 // 10 ticks = 208nS @ 48MHz
-`define SCL_DEL_LEN (4*`CLK_FREQ)/48
+`define SCL_DEL_LEN (2*`CLK_FREQ)/48
 
 // Delay SDA for use in start/stop detection
 // Use delayed SDA during start/stop detection to avoid
@@ -64,5 +64,4 @@
 // in the presence of regular data transitions.
 // This delay time should be less than 100nS
 // 4 ticks = 83nS @ 48MHz
-`define SDA_DEL_LEN (4*`CLK_FREQ)/48
-
+`define SDA_DEL_LEN (2*`CLK_FREQ)/48

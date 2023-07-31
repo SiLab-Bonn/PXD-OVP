@@ -32,15 +32,15 @@ ENTITY ftop144_aux_F IS
     
     clk48     : IN   STD_LOGIC;
     
-    --ax_res       : IN STD_LOGIC;  -- betw(0)
+    ax_res       : IN STD_LOGIC;  -- betw(0)
     ax_clk       : OUT STD_LOGIC;  -- betw(1)
     ax_frame     : OUT STD_LOGIC;  -- betw(2)
     ax_data      : IN  STD_LOGIC;  -- betw(3);
     ax_write     : OUT STD_LOGIC;  -- betw(4)
     ax_dout      : OUT STD_LOGIC;  -- betw(5) 
     
-    op           : OUT STD_LOGIC_VECTOR(4 downto 0);  --jumpers 
-	 
+    op           : OUT STD_LOGIC_VECTOR(4 downto 0);  --jumpers
+    
 	 clk_out		  : OUT STD_LOGIC
   ); 
   
@@ -49,9 +49,9 @@ END ENTITY ftop144_aux_F;
 --
 ARCHITECTURE arch OF ftop144_aux_F IS
 
---signal sclk : STD_LOGIC;  			--not used
---signal iop : STD_LOGIC_VECTOR(4 downto 0);
---signal wstat : STD_LOGIC_VECTOR(23 downto 0);
+signal sclk : STD_LOGIC;
+signal iop : STD_LOGIC_VECTOR(4 downto 0);
+signal wstat : STD_LOGIC_VECTOR(23 downto 0);
 signal istat : STD_LOGIC_VECTOR(23 downto 0);
 signal iax_frame ,iax_clk, iax_write, iax_dout: std_logic;
 signal pk_sread , pk_swrite: std_logic;
@@ -60,9 +60,9 @@ signal pk_rd, pk_wr , pk_serial: std_logic;
 signal pk_sdata_wr : std_logic;
 signal SDA_RX_i : std_logic;
 
---SIGNAL clk    : std_logic;
---SIGNAL sda    : std_logic;
---SIGNAL scl    : std_logic;
+SIGNAL clk    : std_logic;
+SIGNAL sda    : std_logic;
+SIGNAL scl    : std_logic;
 SIGNAL myReg0 : std_logic_vector(7 DOWNTO 0);
 SIGNAL myReg1 : std_logic_vector(7 DOWNTO 0);
 SIGNAL myReg2 : std_logic_vector(7 DOWNTO 0);
@@ -75,7 +75,6 @@ SIGNAL myReg7 : std_logic_vector(7 DOWNTO 0);
 signal gate_domain_on : std_logic;
 signal prog_on : std_logic;
 
-signal ax_res : std_logic            := '0';
 
 COMPONENT i2cSlave
    PORT (
@@ -110,7 +109,7 @@ BEGIN
   ovproti2c : i2cSlave
       PORT MAP (
          clk    => clk48,
-         rst    => ax_res, 
+         rst    => not ax_res, 
          sdaIn  => SDA_TX,
          sdaOut => SDA_RX_i,
          scl    => SCL_TX,
@@ -132,7 +131,8 @@ BEGIN
          pk_serial => pk_serial --pk
          
       );
-
+      
+clk <= clk48;
 clk_out <= clk48;     
 myReg4 <= istat(7 downto 0);
 myReg5 <= istat(15 downto 8);
@@ -235,4 +235,3 @@ begin
 end process bolo;
 
 END ARCHITECTURE arch;
-
